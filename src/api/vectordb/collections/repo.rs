@@ -1,7 +1,6 @@
 use std::sync::Arc;
 
-use crate::{
-    api_service::{init_dense_index_for_collection, init_inverted_index_for_collection},
+use crate::{api_service::{init_dense_index_for_collection, init_inverted_index_for_collection},
     app_context::AppContext,
     models::indexes::inverted_index::InvertedIndex,
     models::{collection::Collection, types::DenseIndex},
@@ -56,7 +55,8 @@ pub(crate) async fn create_dense_index(
     size: usize,
     lower_bound: Option<f32>,
     upper_bound: Option<f32>,
-    max_cache_level: u8,
+    num_layers: u8,
+    auto_config: bool,
 ) -> Result<Arc<DenseIndex>, CollectionsError> {
     // Call init_vector_store using web::block
     let result = init_dense_index_for_collection(
@@ -65,7 +65,8 @@ pub(crate) async fn create_dense_index(
         size,
         lower_bound,
         upper_bound,
-        max_cache_level,
+        num_layers,
+        auto_config,
     )
     .await;
     result.map_err(|e| CollectionsError::FailedToCreateCollection(e.to_string()))
