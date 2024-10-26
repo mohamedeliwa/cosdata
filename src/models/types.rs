@@ -15,6 +15,7 @@ use crate::distance::{
 };
 use crate::models::common::*;
 use crate::models::identity_collections::*;
+use crate::models::indexes::inverted_index::InvertedIndex;
 use crate::models::lazy_load::*;
 use crate::models::versioning::*;
 use crate::quantization::product::ProductQuantization;
@@ -621,6 +622,14 @@ impl CollectionsMap {
         );
 
         Ok(dense_index)
+    }
+
+    pub fn load_inverted_index(
+        &self,
+        coll: &Collection,
+        root_path: &Path,
+    ) -> Result<InvertedIndex, WaCustomError> {
+        Err(WaCustomError::CalculationError)
     }
 
     pub fn insert(&self, name: &str, dense_index: Arc<DenseIndex>) -> Result<(), WaCustomError> {

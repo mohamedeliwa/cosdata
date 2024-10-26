@@ -16,3 +16,4 @@ pub mod types;
 pub mod user;
 pub mod versioning;
 pub mod collection;
+pub mod indexes;

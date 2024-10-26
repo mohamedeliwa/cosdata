@@ -1,10 +1,10 @@
 use crate::app_context::AppContext;
-use crate::indexes::inverted_index::InvertedIndex;
 use crate::models::buffered_io::*;
 use crate::models::cache_loader::NodeRegistry;
 use crate::models::collection::Collection;
 use crate::models::common::*;
 use crate::models::file_persist::*;
+use crate::models::indexes::inverted_index::InvertedIndex;
 use crate::models::lazy_load::*;
 use crate::models::meta_persist::update_current_version;
 use crate::models::rpc::VectorIdValue;
