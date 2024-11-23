@@ -679,6 +679,7 @@ impl CollectionsMap {
         coll: &Collection,
         root_path: &Path,
     ) -> Result<InvertedIndex, WaCustomError> {
+        let collection_path: Arc<Path> = root_path.join(&coll.name).into();
         Err(WaCustomError::CalculationError)
     }
 

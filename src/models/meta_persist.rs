@@ -9,6 +9,7 @@ use std::hash::Hasher;
 use std::sync::Arc;
 
 use super::collection::Collection;
+use super::indexes::inverted_index::InvertedIndex;
 use super::lazy_load::FileIndex;
 
 /// updates the current version of a collection
@@ -174,4 +175,47 @@ pub fn delete_dense_index(
     txn.del(db, &key, None)?;
     txn.commit()?;
     Ok(dense_index)
+}
+
+#[derive(Debug, serde::Serialize, serde::Deserialize)]
+pub struct InvertedIndexData {
+    pub name: String,
+    pub num_layers: u8,
+    pub levels_prob: Arc<Vec<(f64, i32)>>,
+    pub dim: usize,
+    pub file_index: FileIndex,
+    pub quantization_metric: QuantizationMetric,
+    pub distance_metric: DistanceMetric,
+    pub storage_type: StorageType,
+    pub size: usize,
+    pub lower_bound: Option<f32>,
+    pub upper_bound: Option<f32>,
+
+    ///
+    pub name: String,
+    pub description: Option<String>,
+    pub auto_create_index: bool,
+    pub metadata_schema: Option<String>, //object (optional)
+    pub max_vectors: Option<i32>,
+    pub replication_factor: Option<i32>,
+    pub root: Arc<Mutex<InvertedIndexItem>>,
+    pub prop_file: Arc<File>,
+    pub lmdb: MetaDb,
+    pub current_version: ArcShift<Hash>,
+    pub current_open_transaction: ArcShift<Option<Hash>>,
+    pub quantization_metric: Arc<QuantizationMetric>,
+    pub distance_metric: Arc<DistanceMetric>,
+    pub storage_type: StorageType,
+    pub vcs: Arc<VersionControl>,
+}
+
+pub fn load_inverted_index_data(
+    env: &Environment,
+    db: Database,
+    collection_id: &[u8; 8],
+) -> lmdb::Result<InvertedIndex> {
+    let txn = env.begin_ro_txn().unwrap();
+    let index = txn.get(db, collection_id)?;
+    let index: InvertedIndex = from_slice(&index[..]).unwrap();
+    Ok(index)
 }
